@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Pavia-Bold";
+  src: local("Pavia-Bold"),
+    url("../public/assets/fonts/Pavia-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
