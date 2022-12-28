@@ -3,12 +3,21 @@ import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from 'react-toastify';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 function MyApp({ Component, pageProps }: AppProps) {
-  return(
-  <Layout>
-     <ToastContainer autoClose={2000}/>
-    <Component {...pageProps} />
-  </Layout>)
+
+  const queryClient = new QueryClient()
+
+  return (
+    <Layout>
+      <ToastContainer autoClose={2000} />
+      <QueryClientProvider client={queryClient} >
+        <Component {...pageProps} />
+      </QueryClientProvider>
+    </Layout>)
 }
 
 export default MyApp

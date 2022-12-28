@@ -4,14 +4,23 @@ import React, { useState } from 'react'
 import { FaLock, FaUser } from 'react-icons/fa';
 import { FormRegister } from '../../types/User';
 import { registerUser } from '../../services/Auth/AuthService';
+import { useMutation } from '@tanstack/react-query';
 
 const Register: NextPage = () => {
 
     const [registerForm, setRegisterForm] = useState<FormRegister>({ username: '', password: '' })
 
+    const registerUserMutation = useMutation(["register"], registerUser, {
+        onSuccess: () => {
+            console.log("SUCCESS REGISTERED USER")
+        },
+        onError: () => {
+            console.log("FAILED REGISTERED USER")
+        },
+    })
     const handleRegisterUser = async (data: FormRegister) => {
         try {
-            await registerUser(data);
+            await registerUserMutation.mutate(data)
         } catch (error) {
             console.log(error)
         }
