@@ -1,11 +1,13 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import Layout from '../components/Layout';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient();
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
+import Layout from '../components/Layout'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
+
+function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+  const queryClient = new QueryClient()
 
   return (
     <Layout>
@@ -14,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </QueryClientProvider>
     </Layout>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

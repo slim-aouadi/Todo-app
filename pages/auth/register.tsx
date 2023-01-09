@@ -1,16 +1,26 @@
-import { create } from 'domain'
 import { NextPage } from 'next'
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 import { FaLock, FaUser } from 'react-icons/fa'
+import { FiMail } from 'react-icons/fi'
 import { FormRegister } from '../../types/User'
 import { registerUser } from '../../services/Auth/AuthService'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import validationSchema from '../../validation/register.validation'
+import Link from 'next/link'
+import ErrorMessage from '../../errors/auth.error'
 
 const Register: NextPage = () => {
   const [registerForm, setRegisterForm] = useState<FormRegister>({
     username: '',
-    password: ''
+    password: '',
+    email: ''
+  })
+
+  const [errors, setErrors] = useState<FormRegister>({
+    username: '',
+    password: '',
+    email: ''
   })
 
   const registerUserMutation = useMutation(['register'], registerUser, {
@@ -22,9 +32,25 @@ const Register: NextPage = () => {
     }
   })
 
-  const handleRegisterUser = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegisterUser = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    registerUserMutation.mutate(registerForm)
+    validationSchema
+      .validate(registerForm, { abortEarly: false })
+      .then(() => {
+        setErrors({
+          username: '',
+          password: '',
+          email: ''
+        })
+        registerUserMutation.mutate(registerForm)
+      })
+      .catch(error => {
+        const errors = error.inner.reduce((acc: any, err: any) => {
+          acc[err.path] = err.message
+          return acc
+        }, {})
+        setErrors(errors)
+      })
   }
 
   const handleFormFieldUpdate =
@@ -44,36 +70,68 @@ const Register: NextPage = () => {
         className="flex flex-col items-center"
         onSubmit={handleRegisterUser}
       >
-        <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
-          <label htmlFor="username">
-            <FaUser className="text-gray-400 " />
-            <span className="sr-only">Username</span>
-          </label>
-          <input
-            id="username"
-            onChange={handleFormFieldUpdate('username')}
-            value={registerForm.username}
-            className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
-            type="text"
-            name="username"
-            placeholder="Username"
-          />
+        <div>
+          <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
+            <label htmlFor="username">
+              <FaUser className="text-gray-400 " />
+              <span className="sr-only">Username</span>
+            </label>
+            <input
+              id="username"
+              onChange={handleFormFieldUpdate('username')}
+              value={registerForm.username}
+              className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
+              type="text"
+              name="username"
+              placeholder="Username"
+            />
+          </div>
+
+          {'username' in errors && errors.username !== '' ? (
+            <ErrorMessage message={errors.username} />
+          ) : null}
         </div>
 
-        <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
-          <label htmlFor="password">
-            <FaLock className="text-gray-400 " />
-            <span className="sr-only">Password</span>
-          </label>
-          <input
-            id="password"
-            onChange={handleFormFieldUpdate('password')}
-            value={registerForm.password}
-            className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
-            type="password"
-            name="password"
-            placeholder="Password"
-          />
+        <div>
+          <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
+            <label htmlFor="password">
+              <FaLock className="text-gray-400 " />
+              <span className="sr-only">Password</span>
+            </label>
+            <input
+              id="password"
+              onChange={handleFormFieldUpdate('password')}
+              value={registerForm.password}
+              className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
+              type="password"
+              name="password"
+              placeholder="Password"
+            />
+          </div>
+          {'password ' in errors && errors.password !== '' ? (
+            <ErrorMessage message={errors.password} />
+          ) : null}
+        </div>
+
+        <div>
+          <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
+            <label htmlFor="email">
+              <FiMail className="text-gray-400 " />
+              <span className="sr-only">Email</span>
+            </label>
+            <input
+              id="email"
+              onChange={handleFormFieldUpdate('email')}
+              value={registerForm.email}
+              className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
+              type="email"
+              name="email"
+              placeholder="Email"
+            />
+          </div>
+          {'email' in errors && errors.email !== '' ? (
+            <ErrorMessage message={errors.email} />
+          ) : null}
         </div>
 
         <button
@@ -82,6 +140,9 @@ const Register: NextPage = () => {
         >
           Sign Up
         </button>
+        <div className="mt-3 mb-3 text-xs text-blue-500 underline">
+          <Link href="/">SIGNIN WITH EXISTING ACCOUNT</Link>
+        </div>
         {registerUserMutation.isError
           ? 'An error occured during your registration'
           : null}
