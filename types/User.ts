@@ -1,16 +1,16 @@
 export interface User {
-  id: string;
-  username: string;
-  password: string;
+  id: string
+  username: string
+  password: string
 }
 
 export interface FormLogin {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
-
 export interface FormRegister {
-  username: string;
-  password: string;
+  username: string
+  password: string
+  email: string
 }

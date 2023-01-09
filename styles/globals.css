@@ -3,8 +3,33 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Pavia-Bold";
-  src: local("Pavia-Bold"),
-    url("../public/assets/fonts/Pavia-Bold.ttf") format("truetype");
+  font-family: 'Pavia-Bold';
+  src: local('Pavia-Bold'),
+    url('../public/assets/fonts/Pavia-Bold.ttf') format('truetype');
   font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Fira-Code';
+  src: local('FiraCode-Regular'),
+    url('../public/assets/fonts/FiraCode-Regular.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: local('Roboto-Regular'),
+    url('../public/assets/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: local('Roboto-Bold'),
+    url('../public/assets/fonts/Roboto-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+body {
+  font-family: 'Roboto-Bold';
 }

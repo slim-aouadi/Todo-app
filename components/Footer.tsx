@@ -1,7 +1,12 @@
 import React from 'react'
+import { ImStack } from 'react-icons/im'
 
-export default function Footer() {
+const Footer: React.FC = () => {
   return (
-    <div>Footer</div>
+    <div className=" font-body w-full text-white bg-neutral-700 flex justify-center p-4">
+      <ImStack className="text-3xl sm:text-2xl" />
+    </div>
   )
 }
+
+export default Footer
