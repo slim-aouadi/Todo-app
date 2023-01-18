@@ -1,12 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { loginUser } from '../../../libs/prisma/Auth'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import { serialize } from 'cookie'
-
-const secret = process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET
-
-const refresh = process.env.NEXT_PUBLIC_REFRESH_TOKEN_SECRET
+import { generateCookie, generateTokens } from './tokens'
+import { comparePassword } from '../../../utils/encryptionService'
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,41 +12,17 @@ export default async function handler(
 
     if (user == null) return res.status(401).json({ message: 'User Not Found' })
 
-    const match = await bcrypt.compare(req.body.password, user.password)
+    const match = comparePassword(req.body.password, user.password)
 
     if (!match) return res.status(401).json({ message: 'Unothorized' })
 
-    const accessToken = jwt.sign(
-      {
-        UserInfo: {
-          username: user.username
-        }
-      },
-      secret,
-      {
-        expiresIn: '10s'
-      }
-    )
+    const tokens = generateTokens(user.id)
 
-    const refreshToken = jwt.sign(
-      {
-        username: user.username
-      },
-      refresh,
-      {
-        expiresIn: '1d'
-      }
-    )
-    const cookie = serialize('jwt', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/'
-    })
+    const { cookie } = generateCookie(tokens.refreshToken)
+
     res.setHeader('Set-Cookie', cookie)
 
-    return res.status(200).json({ accessToken })
+    return res.status(200).json(tokens.accessToken)
   } catch (error) {
     console.log('Request error', error)
     return res
