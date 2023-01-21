@@ -1,41 +1,56 @@
 import { serialize } from 'cookie'
-import jwt from 'jsonwebtoken'
 import { config } from '../../../utils/config'
-import { REFRESH_TOKEN_COOKIE } from '../../../utils/constants'
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE
+} from '../../../utils/constants'
+import { SignJWT, jwtVerify } from 'jose'
+import { nanoid } from 'nanoid'
 
-export const generateTokens = (userId: string) => {
+export const generateTokens = async (userId: string) => {
   return {
-    accessToken: jwt.sign({ sub: userId }, config.ACCESS_TOKEN.SECRET, {
-      expiresIn: config.ACCESS_TOKEN.EXPIRES_IN_SECONDS
-    }),
-    refreshToken: jwt.sign({ sub: userId }, config.REFRESH_TOKEN.SECRET, {
-      expiresIn: config.REFRESH_TOKEN.EXPIRES_IN_SECONDS
-    })
+    refreshToken: await new SignJWT({})
+      .setProtectedHeader({ alg: 'HS256' })
+      .setJti(nanoid())
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .sign(new TextEncoder().encode(config.REFRESH_TOKEN.SECRET)),
+    accessToken: await new SignJWT({ sub: userId })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setJti(nanoid())
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .sign(new TextEncoder().encode(config.ACCESS_TOKEN.SECRET))
   }
 }
 
-export const generateCookie = (refreshToken: string) => {
-  return {
-    cookie: serialize(REFRESH_TOKEN_COOKIE, refreshToken, {
+export const generateCookies = (tokens: {
+  accessToken: string
+  refreshToken: string
+}) => {
+  return [
+    serialize(ACCESS_TOKEN_COOKIE, tokens.accessToken, {
+      httpOnly: false,
+      secure: config.REFRESH_TOKEN.SECURE,
+      sameSite: config.REFRESH_TOKEN.SAMESITE,
+      maxAge: config.REFRESH_TOKEN.EXPIRES_IN_SECONDS,
+      path: config.REFRESH_TOKEN.PATH
+    }),
+    serialize(REFRESH_TOKEN_COOKIE, tokens.refreshToken, {
       httpOnly: config.REFRESH_TOKEN.HTTPONLY,
       secure: config.REFRESH_TOKEN.SECURE,
       sameSite: config.REFRESH_TOKEN.SAMESITE,
       maxAge: config.REFRESH_TOKEN.EXPIRES_IN_SECONDS,
       path: config.REFRESH_TOKEN.PATH
     })
-  }
+  ]
 }
 
-const verifyToken = (token: string, secret: string) => {
-  try {
-    return jwt.verify(token, secret, {
-      complete: false
-    })
-  } catch {
-    throw 'The access / refresh token in invalid or corrupted'
-  }
-}
+export const verifyToken = async (token: string) => {
+  const verified = await jwtVerify(
+    token,
+    new TextEncoder().encode(config.ACCESS_TOKEN.SECRET)
+  )
 
-export const verifyRefreshToken = (token: string) => {
-  return verifyToken(token, config.REFRESH_TOKEN.SECRET)
+  return verified.payload
 }

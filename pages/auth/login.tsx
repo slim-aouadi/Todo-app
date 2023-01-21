@@ -9,11 +9,9 @@ import { FormLogin } from '../../types/User'
 import validationSchema from '../../validation/login.validation'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import useAuth from '../../hooks/useAuth'
 
 const Login: NextPage = () => {
   const router = useRouter()
-  const { setAuth } = useAuth()
   const [loginForm, setLoginForm] = useState<FormLogin>({
     username: '',
     password: ''
@@ -25,7 +23,6 @@ const Login: NextPage = () => {
 
   const loginUserMutation = useMutation(['login'], loginUser, {
     onSuccess: data => {
-      setAuth(data.data)
       toast.success('Logged in successfully !')
       router.push('/home')
     },

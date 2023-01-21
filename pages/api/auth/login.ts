@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { loginUser } from '../../../libs/prisma/Auth'
-import { generateCookie, generateTokens } from './tokens'
+import { generateCookies, generateTokens } from './tokens'
 import { comparePassword } from '../../../utils/encryptionService'
 
 export default async function handler(
@@ -16,11 +16,11 @@ export default async function handler(
 
     if (!match) return res.status(401).json({ message: 'Unothorized' })
 
-    const tokens = generateTokens(user.id)
+    const tokens = await generateTokens(user.id)
 
-    const { cookie } = generateCookie(tokens.refreshToken)
+    const cookies = generateCookies(tokens)
 
-    res.setHeader('Set-Cookie', cookie)
+    res.setHeader('Set-Cookie', cookies)
 
     return res.status(200).json(tokens.accessToken)
   } catch (error) {
