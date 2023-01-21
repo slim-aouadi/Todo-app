@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-
+import { AuthProvider } from '../context/AuthProvider'
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const queryClient = new QueryClient()
 
@@ -13,7 +13,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     <Layout>
       <ToastContainer autoClose={2000} />
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <AuthProvider>
+          <Component {...pageProps} />
+        </AuthProvider>
       </QueryClientProvider>
     </Layout>
   )

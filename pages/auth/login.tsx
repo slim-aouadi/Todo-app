@@ -8,8 +8,10 @@ import { loginUser } from '../../services/Auth/AuthService'
 import { FormLogin } from '../../types/User'
 import validationSchema from '../../validation/login.validation'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const Login: NextPage = () => {
+  const router = useRouter()
   const [loginForm, setLoginForm] = useState<FormLogin>({
     username: '',
     password: ''
@@ -20,8 +22,9 @@ const Login: NextPage = () => {
   })
 
   const loginUserMutation = useMutation(['login'], loginUser, {
-    onSuccess: () => {
+    onSuccess: data => {
       toast.success('Logged in successfully !')
+      router.push('/home')
     },
     onError: () => {
       toast.error('Check your credentials !')
