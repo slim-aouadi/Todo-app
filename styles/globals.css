@@ -33,3 +33,11 @@
 body {
   font-family: 'Roboto-Bold';
 }
+
+.light {
+  --bg-color-base: 38 38 38;
+}
+
+.dark {
+  --bg-color-base: 38 38 38;
+}

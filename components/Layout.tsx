@@ -8,7 +8,7 @@ export default function Layout({
   children: React.ReactNode
 }): JSX.Element {
   return (
-    <div className="flex flex-col min-h-screen relative bg-neutral-800">
+    <div className="flex flex-col min-h-screen relative bg-color-light">
       <Header />
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         {children}
