@@ -6,6 +6,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './errors/**/*.{js,ts,jsx,tsx}'
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -13,8 +14,7 @@ module.exports = {
       },
       backgroundColor: {
         color: {
-          light: 'rgb(var(--bg-color-base)',
-          dark: 'rgb(var(--bg-color-base)'
+          base: 'rgb(var(--bg-color-base) / <alpha-value>)'
         }
       }
     },

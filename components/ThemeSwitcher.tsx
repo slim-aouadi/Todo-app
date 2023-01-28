@@ -1,21 +1,27 @@
-import { useTheme } from 'next-themes'
 import { MoonIcon } from '../assets/MoonIcon'
 import { SunIcon } from '../assets/SunIcon'
+import {
+  useDarkModeContext,
+  useSetDarkModeContext
+} from '../context/DarkModeContext'
+import toggleTheme from '../utils/toggleTheme'
 
 export const ThemeSwitcher = () => {
-  const { systemTheme, theme, setTheme } = useTheme()
+  const theme = useDarkModeContext()
+  const setStoredMode = useSetDarkModeContext()
 
-  const currentTheme = theme === 'system' ? systemTheme : theme
-
-  if (currentTheme === 'dark') {
+  const handleThemeSwitch = () => {
+    setStoredMode(toggleTheme(theme))
+  }
+  if (theme === 'dark') {
     return (
-      <button type={'button'} onClick={() => setTheme('light')}>
+      <button type={'button'} onClick={handleThemeSwitch}>
         <SunIcon className="" />
       </button>
     )
   } else {
     return (
-      <button type={'button'} onClick={() => setTheme('dark')}>
+      <button type={'button'} onClick={handleThemeSwitch}>
         <MoonIcon className="" />
       </button>
     )
