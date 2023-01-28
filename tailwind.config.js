@@ -14,7 +14,13 @@ module.exports = {
       },
       backgroundColor: {
         color: {
-          base: 'rgb(var(--bg-color-base) / <alpha-value>)'
+          base: 'rgb(var(--bg-color-base) / <alpha-value>)',
+          card: 'rgb(var(--bg-color-card) / <alpha-value>)'
+        }
+      },
+      textColor: {
+        color: {
+          base: 'rgb(var(--text-color-base) / <alpha-value>)'
         }
       }
     },

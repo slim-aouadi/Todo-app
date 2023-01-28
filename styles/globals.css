@@ -37,9 +37,13 @@ body {
 @layer base {
   .light {
     --bg-color-base: 250 250 250;
+    --text-color-base: 0 0 0;
+    --bg-color-card: 250 250 250;
   }
 
   .dark {
-    --bg-color-base: 38 38 38;
+    --bg-color-base: 0 0 0;
+    --text-color-base: 250 250 250;
+    --bg-color-card: 38 38 38;
   }
 }

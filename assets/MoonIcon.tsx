@@ -1,4 +1,4 @@
-export const MoonIcon = ({ className }: { className: string }) => {
+export const MoonIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -1,37 +1,26 @@
-import { useMutation } from '@tanstack/react-query'
 import { NextPage } from 'next'
 import React, { useState } from 'react'
 import { FaLock, FaUser } from 'react-icons/fa'
-import { toast } from 'react-toastify'
 import ErrorMessage from '../../errors/auth.error'
-import { loginUser } from '../../services/Auth/AuthService'
 import { FormLogin } from '../../types/User'
 import validationSchema from '../../validation/login.validation'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useLogin } from '../../hooks/auth'
 
 const Login: NextPage = () => {
-  const router = useRouter()
+  const { mutate: login, isError } = useLogin()
+
   const [loginForm, setLoginForm] = useState<FormLogin>({
     username: '',
     password: ''
   })
+
   const [errors, setErrors] = useState<FormLogin>({
     username: '',
     password: ''
   })
 
-  const loginUserMutation = useMutation(['login'], loginUser, {
-    onSuccess: data => {
-      toast.success('Logged in successfully !')
-      router.push('/home')
-    },
-    onError: () => {
-      toast.error('Check your credentials !')
-    }
-  })
-
-  const handleRegisterUser = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleLoginUser = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
     validationSchema
       .validate(loginForm, { abortEarly: false })
@@ -40,7 +29,7 @@ const Login: NextPage = () => {
           username: '',
           password: ''
         })
-        loginUserMutation.mutate(loginForm)
+        login(loginForm)
       })
       .catch(error => {
         const errors = error.inner.reduce((acc: any, err: any) => {
@@ -57,17 +46,16 @@ const Login: NextPage = () => {
     }
 
   return (
-    <div className="text-dark rounded-2xl shadow-2xl w-2/3 max-w-4xl bg-white text-center">
-      <h2 className="p-5 text-3xl sm:text-2xl">Login</h2>
+    <div className="text-dark rounded-2xl shadow-2xl w-2/3 max-w-4xl text-center bg-color-card">
+      <h2 className="p-5 text-3xl sm:text-2xl text-color-base">Login</h2>
 
-      <div className="py-10 text-2xl sm:text-1xl">Enter your credentials</div>
+      <div className="py-10 text-2xl sm:text-1xl text-color-base">
+        Enter your credentials
+      </div>
 
       <div className="w-10 h-1 bg-green-500 mb-2 inline-block" />
 
-      <form
-        className="flex flex-col items-center"
-        onSubmit={handleRegisterUser}
-      >
+      <form className="flex flex-col items-center" onSubmit={handleLoginUser}>
         <div>
           <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
             <label htmlFor="username">
@@ -120,7 +108,9 @@ const Login: NextPage = () => {
         <div className="mt-3 mb-3 text-xs text-blue-500 underline">
           <Link href="/auth/register">CREATE NEW ACCOUNT</Link>
         </div>
-        {loginUserMutation.isError ? 'An error occured during auth' : null}
+        {isError ? (
+          <ErrorMessage message={'An error occured during auth'} />
+        ) : null}
       </form>
     </div>
   )

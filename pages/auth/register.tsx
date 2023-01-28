@@ -59,10 +59,12 @@ const Register: NextPage = () => {
     }
 
   return (
-    <div className="text-dark rounded-2xl shadow-2xl w-2/3 max-w-4xl bg-white text-center">
-      <h2 className="p-5 text-3xl sm:text-2xl">Register</h2>
+    <div className="text-dark rounded-2xl shadow-2xl w-2/3 max-w-4xl bg-color-card text-center">
+      <h2 className="p-5 text-3xl sm:text-2xl text-color-base">Register</h2>
 
-      <div className="py-10 text-2xl sm:text-1xl">Enter your credentials</div>
+      <div className="py-10 text-2xl sm:text-1xl text-color-base">
+        Enter your credentials
+      </div>
 
       <div className="w-10 h-1 bg-green-500 mb-2 inline-block" />
 
