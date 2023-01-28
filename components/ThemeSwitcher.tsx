@@ -13,17 +13,14 @@ export const ThemeSwitcher = () => {
   const handleThemeSwitch = () => {
     setStoredMode(toggleTheme(theme))
   }
-  if (theme === 'dark') {
-    return (
-      <button type={'button'} onClick={handleThemeSwitch}>
-        <SunIcon className="" />
-      </button>
-    )
-  } else {
-    return (
-      <button type={'button'} onClick={handleThemeSwitch}>
-        <MoonIcon className="" />
-      </button>
-    )
-  }
+
+  return (
+    <button
+      type={'button'}
+      onClick={handleThemeSwitch}
+      className="border-2 rounded p-1"
+    >
+      {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+    </button>
+  )
 }
