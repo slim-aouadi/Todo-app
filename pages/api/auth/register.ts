@@ -5,8 +5,8 @@ export default async function handler(
   res: NextApiResponse
 ): Promise<void> {
   try {
-    const { user } = await registerUser(req.body)
-    return res.status(200).json({ user })
+    await registerUser(req.body)
+    return res.status(200).json('User Successfully Registered !')
   } catch (error) {
     console.log('Request error', error)
     return res

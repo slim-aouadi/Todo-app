@@ -10,7 +10,8 @@ export default async function handler(
   try {
     const { user } = await loginUser(req.body)
 
-    if (user == null) return res.status(401).json({ message: 'User Not Found' })
+    if (user === null)
+      return res.status(401).json({ message: 'User Not Found' })
 
     const match = comparePassword(req.body.password, user.password)
 

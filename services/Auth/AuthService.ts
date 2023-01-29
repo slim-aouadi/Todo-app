@@ -14,6 +14,11 @@ export async function loginUser(data: FormLogin) {
 }
 
 export async function refreshToken() {
-  const result = await axios.post('http://localhost:3000/api/auth/refreshToken')
+  const result = await axios.get('http://localhost:3000/api/auth/refreshToken')
+  return result
+}
+
+export async function fetchLoggedUser() {
+  const result = await axios.get('http://localhost:3000/api/auth/loggedUser')
   return result
 }

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { fetchUserById } from '../../../libs/prisma/User'
 import { REFRESH_TOKEN_COOKIE } from '../../../utils/constants'
-import { generateTokens, verifyRefreshToken } from './tokens'
+import { generateTokens, verifyToken } from './tokens'
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -11,16 +11,16 @@ export default async function handler(
 
     if (!reqCookie) return res.status(401).json({ message: 'Unothorized' })
 
-    const verification = verifyRefreshToken(reqCookie)
+    const verification = await verifyToken(reqCookie)
 
-    const { user } = await fetchUserById(verification?.sub as string)
+    const user = await fetchUserById(verification?.value as string)
 
     if (user == null)
       return res
         .status(401)
         .json({ message: 'User not matching Refresh Token' })
 
-    const tokens = generateTokens(user.id)
+    const tokens = await generateTokens(user.id)
 
     return res.status(200).json(tokens.accessToken)
   } catch (error) {

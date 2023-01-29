@@ -1,9 +1,23 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import useRefreshToken from '../hooks/useRefreshToken'
+import { fetchLoggedUser } from '../services/Auth/AuthService'
 
 const Home = () => {
-  const refreshToken = useRefreshToken()
-  return <div onClick={() => refreshToken()}> Welcome home ! </div>
+  const mutation = useQuery({
+    queryKey: ['auth'],
+    queryFn: fetchLoggedUser
+  })
+
+  return <div className="text-white"> Welcome home </div>
 }
+
+/* export async function getServerSideProps() {
+  const loggedUser = await fetchLoggedUser()
+  return {
+    props: {
+      loggedUser
+    } // will be passed to the page component as props
+  }
+} */
 
 export default Home
