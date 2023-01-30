@@ -17,3 +17,18 @@ export const useLogin = () => {
     }
   })
 }
+
+export const useRegister = () => {
+  const router = useRouter()
+  return useMutation({
+    mutationKey: ['register'],
+    mutationFn: AuthService.registerUser,
+    onSuccess: async () => {
+      toast.success('Successfully registered')
+      return await router.push('/')
+    },
+    onError: () => {
+      return toast.error('This username / password already exists ')
+    }
+  })
+}
