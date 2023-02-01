@@ -3,10 +3,14 @@ import React from 'react'
 import { FaLock, FaUser } from 'react-icons/fa'
 import ErrorMessage from '../../errors/auth.error'
 import { LoginForm } from '../../types/User'
-import Link from 'next/link'
 import { useLogin } from '../../hooks/auth'
 import { Formik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { FormControl } from '../../components/ui/Form/FormControl/FormControl'
+import { FormInput } from '../../components/ui/Form/Input/FormInput'
+import { ButtonCta } from '../../components/ui/Form/Button/ButtonCta'
+import { ButtonLink } from '../../components/ui/Form/Button/ButtonLink'
+import { FormFooter } from '../../components/ui/Form/FormFooter/FormFooter'
 
 const Login: NextPage = () => {
   const { mutate: login, isError } = useLogin()
@@ -37,56 +41,31 @@ const Login: NextPage = () => {
             className="flex flex-col items-center"
             onSubmit={props.handleSubmit}
           >
-            <div>
-              <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
-                <label htmlFor="username">
-                  <FaUser className="text-gray-400 " />
-                  <span className="sr-only">Username</span>
-                </label>
-                <input
-                  id="username"
-                  onChange={props.handleChange}
-                  value={props.values.username}
-                  className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                />
-              </div>
-              {props.errors.username !== undefined ? (
-                <ErrorMessage message={props.errors.username} />
-              ) : null}
-            </div>
-
-            <div>
-              <div className="bg-gray-100 w-64 p-2 flex  mb-3 gap-2">
-                <label htmlFor="password">
-                  <FaLock className="text-gray-400 " />
-                  <span className="sr-only">Password</span>
-                </label>
-                <input
-                  id="password"
-                  onChange={props.handleChange}
-                  value={props.values.password}
-                  className="bg-gray-100 outline-none duration-300 text-sm flex-1 border-b-2 border-solid border-gray-100 max-w-[30ch] focus:border-green-500"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                />
-              </div>
-              {props.errors.password !== undefined ? (
-                <ErrorMessage message={props.errors.password} />
-              ) : null}
-            </div>
-            <button
-              type="submit"
-              className="border-2 rounded-3xl border-green-500 text-green-500 rounded-fill px-12 py-2 inline-block hover:bg-green-500 hover:text-white mb-5"
+            <FormControl
+              id="username"
+              name="username"
+              label="username"
+              labelElement={<FaUser className="text-gray-400 " />}
+              placeholder="Username"
             >
-              Sign In
-            </button>
-            <div className="mt-3 mb-3 text-xs text-blue-500 underline">
-              <Link href="/auth/register">CREATE NEW ACCOUNT</Link>
-            </div>
+              {fieldProps => <FormInput type="text" {...fieldProps} />}
+            </FormControl>
+
+            <FormControl
+              id="password"
+              name="password"
+              label="password"
+              labelElement={<FaLock className="text-gray-400 " />}
+              placeholder="Password"
+            >
+              {fieldProps => <FormInput type="password" {...fieldProps} />}
+            </FormControl>
+
+            <FormFooter>
+              <ButtonCta>Sign In</ButtonCta>
+              <ButtonLink to="/auth/register">CREATE A NEW ACCOUNT</ButtonLink>
+            </FormFooter>
+
             {isError ? (
               <ErrorMessage message={'An error occured during auth'} />
             ) : null}
